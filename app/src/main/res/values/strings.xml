@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">ToDoApp</string>
+    <string name="screen_start_name">Start Screen</string>
+    <string name="screen_list_name">ToDoList Screen</string>
+    <string name="screen_add_name">Add Element Screen</string>
+    <string name="back_button">Back</string>
+</resources>
