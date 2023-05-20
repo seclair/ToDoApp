@@ -9,13 +9,13 @@ import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface todoelementDAO {
+interface ToDoElementDAO {
 
-    @Query("SELECT * from todoelement ORDER BY id ASC")
+    @Query("SELECT * from ToDoElement ORDER BY id ASC")
     fun getAllToDos(): Flow<List<ToDoElement>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(todoelement: ToDoElement)
+    suspend fun insert(toDoElement: ToDoElement)
 
     @Update
     suspend fun update(toDoElement: ToDoElement)
