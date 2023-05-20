@@ -1,37 +1,13 @@
 package com.example.todoapp.data
 
-import android.content.ClipData
-import com.example.todoapp.data.ToDoElement
-
 
 class Datasource {
     fun loadItems(): List<ToDoElement> {
         return listOf<ToDoElement>(
-            ToDoElement("Dies ist das erste ToDo."),
-            ToDoElement("Dies ist das zweite ToDo."),
-            ToDoElement("Dies ist das dritte ToDo."),
-            ToDoElement("Dies ist das vierte ToDo."),
-            ToDoElement("Dies ist das erste ToDo, welches gaaanz lang ist."),
-            ToDoElement("Dies ist das zweite ToDo."),
-            ToDoElement("Dies ist das dritte ToDo."),
-            ToDoElement("Dies ist das vierte ToDo."),
-            ToDoElement("Dies ist das erste ToDo."),
-            ToDoElement("Dies ist das zweite ToDo."),
-            ToDoElement("Dies ist das dritte ToDo."),
-            ToDoElement("Dies ist das vierte ToDo."),
-            ToDoElement("Dies ist das erste ToDo."),
-            ToDoElement("Dies ist das zweite ToDo."),
-            ToDoElement("Dies ist das dritte ToDo."),
-            ToDoElement("Dies ist das vierte ToDo."),
-            ToDoElement("Dies ist das erste ToDo."),
-            ToDoElement("Dies ist das zweite ToDo."),
-            ToDoElement("Dies ist das dritte ToDo."),
-            ToDoElement("Dies ist das vierte ToDo."),
-            ToDoElement("Dies ist das erste ToDo."),
-            ToDoElement("Dies ist das zweite ToDo."),
-            ToDoElement("Dies ist das dritte ToDo."),
-            ToDoElement("Dies ist das vierte ToDo."),
-            ToDoElement("Dies ist das fünfte ToDo.")
+            ToDoElement(1, "Dies ist das erste ToDo.", 0),
+            ToDoElement(2, "Dies ist das erste ToDo.", 0),
+            ToDoElement(3, "Dies ist das erste ToDo.", 0),
+            ToDoElement(4, "Dies ist das erste ToDo.", 0),
         )
     }
 }

@@ -38,7 +38,7 @@ fun ToDoList(todolist: List<ToDoElement>, modifier: Modifier = Modifier){
 fun ToDoCard(todoelement: ToDoElement, modifier: Modifier = Modifier){
     Card(modifier = Modifier.padding(8.dp)){
         Column{
-            Text(text = todoelement.string)
+            Text(text = todoelement.description)
         }
     }
 }
@@ -46,5 +46,5 @@ fun ToDoCard(todoelement: ToDoElement, modifier: Modifier = Modifier){
 @Preview
 @Composable
 private fun ToDoCardPreview(){
-    ToDoCard(ToDoElement("This is a test ToDo."))
+    //ToDoCard(ToDoElement("This is a test ToDo."))
 }
