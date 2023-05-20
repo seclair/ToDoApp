@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 
 @Database(entities = [ToDoElement::class], version = 1, exportSchema = false)
 abstract class ToDoDatabase : RoomDatabase() {
-    abstract fun itemDao(): todoelementDAO
+    abstract fun toDoElementDao(): ToDoElementDAO
     companion object {
         @Volatile
         private var Instance: ToDoDatabase? = null
