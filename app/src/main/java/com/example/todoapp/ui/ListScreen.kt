@@ -15,13 +15,6 @@ import com.example.todoapp.data.ToDoElement
 
 @Composable
 fun ListScreen() {
-    /*Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text("This is the List Screen")
-    }*/
     ToDoList(todolist = Datasource().loadItems())
 }
 

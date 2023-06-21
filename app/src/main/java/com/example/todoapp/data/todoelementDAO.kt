@@ -23,4 +23,7 @@ interface ToDoElementDAO {
     @Delete
     suspend fun delete(toDoElement: ToDoElement)
 
+    @Query("SELECT * FROM ToDoElement ORDER BY id ASC LIMIT 1;\n")
+    fun getFirstToDo(): ToDoElement
+
 }
