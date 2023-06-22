@@ -1,5 +1,6 @@
 package com.example.todoapp.ui
 
+import android.util.Log
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -26,6 +27,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.todoapp.R
+import com.example.todoapp.ToDoApplication
 
 
 enum class ToDoScreen (@StringRes val title: Int) {
@@ -39,9 +41,10 @@ enum class ToDoScreen (@StringRes val title: Int) {
 @Composable
 fun ToDoApp(
     //viewModel: ToDoViewModel = viewModel(factory = ToDoViewModel.factory),
-    //toDoApplication: ToDoApplication = ToDoApplication(),
+    toDoApplication: ToDoApplication = ToDoApplication(),
     modifier: Modifier = Modifier
 ) {
+    Log.d("Room", "Starting fun ToDoApp")
     val navController: NavHostController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentScreen = ToDoScreen.valueOf( backStackEntry?.destination?.route ?: ToDoScreen.Start.name)

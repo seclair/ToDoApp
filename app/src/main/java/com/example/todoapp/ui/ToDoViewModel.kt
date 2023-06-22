@@ -13,7 +13,7 @@ class ToDoViewModel(private val toDoElementDao: ToDoElementDAO): ViewModel() {
         val factory : ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val application = (this[APPLICATION_KEY] as ToDoApplication)
-                ToDoViewModel(application.db.toDoElementDao())
+                ToDoViewModel(application.database.toDoElementDao())
             }
         }
     }
