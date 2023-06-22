@@ -7,6 +7,5 @@ import androidx.room.PrimaryKey
 data class ToDoElement (
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
-    val description: String,
-    val status: Int
+    val description: String
 )
