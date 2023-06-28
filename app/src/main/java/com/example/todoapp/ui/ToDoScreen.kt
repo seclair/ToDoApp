@@ -1,36 +1,30 @@
 package com.example.todoapp.ui
 
-import android.util.Log
-import androidx.annotation.StringRes
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
+// added
+
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.todoapp.R
-import com.example.todoapp.ToDoApplication
 
 
-enum class ToDoScreen (@StringRes val title: Int) {
+
+/*enum class ToDoScreen (@StringRes val title: Int) {
     Start(title = R.string.screen_start_name),
     List(title = R.string.screen_list_name),
     AddElement(title = R.string.screen_add_name)
@@ -40,9 +34,9 @@ enum class ToDoScreen (@StringRes val title: Int) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ToDoApp(
-    //viewModel: ToDoViewModel = viewModel(factory = ToDoViewModel.factory),
-    toDoApplication: ToDoApplication = ToDoApplication(),
-    modifier: Modifier = Modifier
+    viewModel: ToDoViewModel = viewModel(factory = ToDoViewModel.factory)
+    //toDoApplication: ToDoApplication = ToDoApplication(),
+    //modifier: Modifier = Modifier
 ) {
     Log.d("Room", "Starting fun ToDoApp")
     val navController: NavHostController = rememberNavController()
@@ -98,7 +92,7 @@ fun ToDoApp(
         NavHost(
             navController = navController,
             startDestination = ToDoScreen.Start.name,
-            modifier = modifier.padding(innerPadding))
+            modifier = Modifier.padding(innerPadding))
         {
             composable(route = ToDoScreen.Start.name) {
                 StartScreen()
@@ -117,4 +111,84 @@ fun ToDoApp(
 @Composable
 fun testToDoScreen(){
     ToDoApp()
+}*/
+
+enum class ToDoScreen {
+    StartScreen,
+    ListScreen
 }
+
+@Composable
+fun ToDoApp(
+    viewModel: ToDoViewModel = viewModel(factory = ToDoViewModel.factory)
+) {
+    val navController = rememberNavController()
+    val startScreenTitle = "StartScreen"
+    var topAppBarTitle by remember { mutableStateOf(startScreenTitle) }
+    val fullToDoList by viewModel.getAllToDos().collectAsState(emptyList())
+    val onBackHandler = {
+        topAppBarTitle = startScreenTitle
+        navController.navigateUp()
+    }
+
+    Scaffold(
+        topBar = {
+            ToDoTopAppBar(
+                title = topAppBarTitle,
+                canNavigateBack = navController.previousBackStackEntry != null,
+                onBackClick = { onBackHandler() }
+            )
+        }
+    ) { innerPadding ->
+        NavHost(
+            navController = navController,
+            modifier = Modifier.padding(innerPadding),
+            startDestination = ToDoScreen.StartScreen.name
+        ) {
+            composable(ToDoScreen.StartScreen.name) {
+                //FullToDoScreen(
+                 //   toDoElements = fullToDoList
+                //)
+                ToDoScreen(toDoElements = fullToDoList)
+
+            }
+        }
+    }
+}
+
+// The TopBar to hold Information
+
+@Composable
+fun ToDoTopAppBar(
+    title: String,
+    canNavigateBack: Boolean,
+    onBackClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    if (canNavigateBack) {
+        TopAppBar(
+            title = { Text(title) },
+            navigationIcon = {
+                IconButton(onClick = onBackClick) {
+                    Icon(
+                        imageVector = Icons.Filled.ArrowBack,
+                        contentDescription = "Back"
+                    )
+                }
+            },
+            modifier = modifier
+        )
+    } else {
+        TopAppBar(
+            title = { Text(title) },
+            modifier = modifier
+        )
+    }
+}
+
+// The bottom App Bar to hold the navigation
+@Composable
+fun ToDoBottomAppBar(){
+
+}
+// preview of the top & bottom app bars
