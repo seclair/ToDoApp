@@ -1,12 +1,16 @@
 package com.example.todoapp.ui
 
-// added
-
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.List
+import androidx.compose.material3.FabPosition
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -126,19 +130,19 @@ fun ToDoApp(
     val startScreenTitle = "StartScreen"
     var topAppBarTitle by remember { mutableStateOf(startScreenTitle) }
     val fullToDoList by viewModel.getAllToDos().collectAsState(emptyList())
-    val onBackHandler = {
-        topAppBarTitle = startScreenTitle
-        navController.navigateUp()
-    }
 
     Scaffold(
-        topBar = {
-            ToDoTopAppBar(
-                title = topAppBarTitle,
-                canNavigateBack = navController.previousBackStackEntry != null,
-                onBackClick = { onBackHandler() }
-            )
-        }
+        topBar = {ToDoTopAppBar(title = topAppBarTitle)},
+        bottomBar = {ToDoNavigationBar()} ,
+        floatingActionButton = {
+            FloatingActionButton(
+                //shape = CircleShape,
+                onClick = {}
+            ) {
+                Icon(Icons.Filled.Add, contentDescription = "Add")
+            }
+        },
+        floatingActionButtonPosition = FabPosition.End
     ) { innerPadding ->
         NavHost(
             navController = navController,
@@ -146,10 +150,7 @@ fun ToDoApp(
             startDestination = ToDoScreen.StartScreen.name
         ) {
             composable(ToDoScreen.StartScreen.name) {
-                //FullToDoScreen(
-                 //   toDoElements = fullToDoList
-                //)
-                ToDoScreen(toDoElements = fullToDoList)
+                StartScreen(toDoElements = fullToDoList)
 
             }
         }
@@ -157,38 +158,38 @@ fun ToDoApp(
 }
 
 // The TopBar to hold Information
-
 @Composable
 fun ToDoTopAppBar(
     title: String,
-    canNavigateBack: Boolean,
-    onBackClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    if (canNavigateBack) {
-        TopAppBar(
-            title = { Text(title) },
-            navigationIcon = {
-                IconButton(onClick = onBackClick) {
-                    Icon(
-                        imageVector = Icons.Filled.ArrowBack,
-                        contentDescription = "Back"
-                    )
-                }
-            },
-            modifier = modifier
-        )
-    } else {
-        TopAppBar(
-            title = { Text(title) },
-            modifier = modifier
-        )
-    }
+    TopAppBar(
+        title = { Text(title) },
+        modifier = modifier
+    )
 }
 
 // The bottom App Bar to hold the navigation
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun ToDoBottomAppBar(){
+fun ToDoNavigationBar(){
+    var selectedItem by remember { mutableStateOf(0)}
+    var items = listOf("Start", "Lists")
+    NavigationBar{
+        items.forEachIndexed { index, item ->
+            NavigationBarItem(
+                icon = {
+                    when(item){
+                        "Start" -> Icon(Icons.Filled.Home, contentDescription = item)
+                        "Lists" -> Icon(Icons.Filled.List, contentDescription = item)
+                    }
+                },
+                label = {Text(item)},
+                selected = selectedItem == index,
+                onClick = { selectedItem = index }
+            )
+        }
+    }
 
 }
 // preview of the top & bottom app bars

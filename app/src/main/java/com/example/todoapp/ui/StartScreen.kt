@@ -10,7 +10,7 @@ import com.example.todoapp.data.ToDoElement
 
 // This is the Start Screen which welcomes you and holds all important Information. In the future it should contain the relevant ToDos of all your ToDoLists
 @Composable
-fun ToDoScreen(
+fun StartScreen(
     toDoElements: List<ToDoElement>,
     modifier: Modifier = Modifier
 ) {
