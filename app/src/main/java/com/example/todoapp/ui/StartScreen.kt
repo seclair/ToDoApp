@@ -11,6 +11,7 @@ import com.example.todoapp.data.ToDoElement
 // This is the Start Screen which welcomes you and holds all important Information. In the future it should contain the relevant ToDos of all your ToDoLists
 @Composable
 fun StartScreen(
+    viewModel: ToDoViewModel,
     toDoElements: List<ToDoElement>,
     modifier: Modifier = Modifier
 ) {
@@ -19,7 +20,7 @@ fun StartScreen(
             items = toDoElements,
             key = { ToDoElement -> ToDoElement.id }
         ) { singletodo ->
-            ToDoCard(element = singletodo)
+            ClickableToDoCard(viewModel, element = singletodo)
         }
     }
 }

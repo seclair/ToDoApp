@@ -1,6 +1,7 @@
 package com.example.todoapp.data
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -20,8 +21,8 @@ interface ToDoElementDAO {
     suspend fun insert(toDoElement: ToDoElement)
     //@Update
     //suspend fun update(toDoElement: ToDoElement)
-    //@Delete
-    //suspend fun delete(toDoElement: ToDoElement)
+    @Delete
+    suspend fun delete(toDoElement: ToDoElement)
     //@Query("SELECT * FROM ToDoElement ORDER BY id ASC LIMIT 1;\n")
     //fun getFirstToDo(): ToDoElement
 }

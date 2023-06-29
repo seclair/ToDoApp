@@ -12,10 +12,10 @@ fun ListScreen() {
 }
 
 @Composable
-fun ToDoList(todolist: List<ToDoElement>, modifier: Modifier = Modifier){
+fun ToDoList(viewModel: ToDoViewModel, todolist: List<ToDoElement>, modifier: Modifier = Modifier){
     LazyColumn{
         items(todolist){todoelement->
-            ToDoCard(todoelement)
+            ClickableToDoCard(viewModel, todoelement, modifier)
         }
     }
 }
