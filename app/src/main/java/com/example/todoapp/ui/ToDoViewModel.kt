@@ -13,6 +13,10 @@ import kotlinx.coroutines.flow.Flow
 class ToDoViewModel(private val toDoElementDao: ToDoElementDAO): ViewModel() {
     // Get all ToDos in the DefaultToDoList.
     fun getAllToDos(): Flow<List<ToDoElement>> = toDoElementDao.getAllToDos()
+    // Add a ToDoElement to the Database
+    suspend fun addToDoElement(toDoElement: ToDoElement){
+        toDoElementDao.insert(toDoElement)
+    }
 
     companion object {
         val factory : ViewModelProvider.Factory = viewModelFactory {

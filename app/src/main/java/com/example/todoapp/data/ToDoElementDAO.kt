@@ -1,6 +1,8 @@
 package com.example.todoapp.data
 
 import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
 
@@ -13,9 +15,9 @@ interface ToDoElementDAO {
     // Gets the ToDos for a specific Title.
     @Query("SELECT * from DefaultToDoList WHERE title = :title ORDER BY title ASC")
     fun getToDos(title: String): Flow<List<ToDoElement>>
-
-    //@Insert(onConflict = OnConflictStrategy.IGNORE)
-    //suspend fun insert(toDoElement: ToDoElement)
+    // Add a ToDoElement to the Database
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insert(toDoElement: ToDoElement)
     //@Update
     //suspend fun update(toDoElement: ToDoElement)
     //@Delete

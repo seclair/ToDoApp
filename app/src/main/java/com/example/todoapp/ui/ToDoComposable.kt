@@ -6,8 +6,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,7 +18,7 @@ import com.example.todoapp.data.ToDoElement
 
 @Composable
 fun ToDoCard(element: ToDoElement, modifier: Modifier = Modifier){
-    Card(Modifier
+    ElevatedCard(Modifier
         .fillMaxWidth()
         .padding(2.dp)
         .clickable {  },
@@ -50,6 +50,6 @@ fun ToDoCard(element: ToDoElement, modifier: Modifier = Modifier){
 @Preview
 @Composable
 private fun ToDoCardPreview(){
-    val dummyElement = ToDoElement(0,"Beilspiel Liste",0,"Ein Beispiel ToDo, could be a longer title too.","Nearly no description, but we could write a lot in here. A LOT! And some more, because this is a decription-.")
+    val dummyElement = ToDoElement("Beilspiel Liste",0,"Ein Beispiel ToDo, could be a longer title too.","Nearly no description, but we could write a lot in here. A LOT! And some more, because this is a decription-.")
     ToDoCard(element = dummyElement)
 }

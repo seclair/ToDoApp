@@ -7,8 +7,6 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "DefaultToDoList")
 data class ToDoElement(
-    @PrimaryKey
-    val id: Int,
     // Name of the ToDoList the Element is a part of.
     @NonNull
     @ColumnInfo(name="List")
@@ -24,4 +22,7 @@ data class ToDoElement(
     // Description of the ToDoElement
     @ColumnInfo(name="Description")
     val description: String
-)
+){
+    @PrimaryKey(autoGenerate = true)
+    var id: Long = 0
+}

@@ -6,7 +6,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
-import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -21,101 +20,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-
-
-
-/*enum class ToDoScreen (@StringRes val title: Int) {
-    Start(title = R.string.screen_start_name),
-    List(title = R.string.screen_list_name),
-    AddElement(title = R.string.screen_add_name)
-}
-
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun ToDoApp(
-    viewModel: ToDoViewModel = viewModel(factory = ToDoViewModel.factory)
-    //toDoApplication: ToDoApplication = ToDoApplication(),
-    //modifier: Modifier = Modifier
-) {
-    Log.d("Room", "Starting fun ToDoApp")
-    val navController: NavHostController = rememberNavController()
-    val backStackEntry by navController.currentBackStackEntryAsState()
-    val currentScreen = ToDoScreen.valueOf( backStackEntry?.destination?.route ?: ToDoScreen.Start.name)
-
-    Scaffold(
-        floatingActionButton = {
-            FloatingActionButton(onClick = {
-                if (currentScreen != ToDoScreen.AddElement){
-                    navController.navigate(ToDoScreen.AddElement.name)
-                }
-            }) {
-                Icon(Icons.Filled.Add, contentDescription = "Add")
-            }
-        },
-        bottomBar = {
-            BottomAppBar(
-                modifier = Modifier,
-                containerColor = MaterialTheme.colorScheme.onPrimary,
-                contentColor = MaterialTheme.colorScheme.onPrimary,
-                tonalElevation = 1.dp,
-
-                content = {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceEvenly
-                    ){
-                        Button(onClick = {
-                            if (currentScreen != ToDoScreen.Start){
-                                navController.navigate(ToDoScreen.Start.name){
-                                    popUpTo(ToDoScreen.Start.name){ inclusive = true }
-                                }
-                            }
-                        },modifier = Modifier.weight(1f)){
-                            Text("Start")
-                        }
-                        //Spacer(Modifier.weight(1f, true))
-                        Button(onClick = {
-                            if (currentScreen != ToDoScreen.List){
-                                navController.navigate(ToDoScreen.List.name){
-                                    popUpTo(ToDoScreen.List.name){ inclusive = true }
-                                }
-                            }
-                        },modifier = Modifier.weight(1f)){
-                            Text("List")
-                        }
-                    }
-                }
-            )
-        },
-    ) { innerPadding ->
-        NavHost(
-            navController = navController,
-            startDestination = ToDoScreen.Start.name,
-            modifier = Modifier.padding(innerPadding))
-        {
-            composable(route = ToDoScreen.Start.name) {
-                StartScreen()
-            }
-            composable(route = ToDoScreen.List.name) {
-                ListScreen ()
-            }
-            composable(route = ToDoScreen.AddElement.name) {
-                AddElementScreen()
-            }
-        }
-    }
-}
-
-@Preview
-@Composable
-fun testToDoScreen(){
-    ToDoApp()
-}*/
 
 enum class ToDoScreen {
     StartScreen,
@@ -128,21 +38,26 @@ fun ToDoApp(
 ) {
     val navController = rememberNavController()
     val startScreenTitle = "StartScreen"
-    var topAppBarTitle by remember { mutableStateOf(startScreenTitle) }
+    val topAppBarTitle by remember { mutableStateOf(startScreenTitle) }
     val fullToDoList by viewModel.getAllToDos().collectAsState(emptyList())
 
+    // For Add ToDoElement Dialog
+    var showDialog = remember { mutableStateOf(false) }
+    val options = listOf("Default List", "Einkaufs Liste", "Lese Liste")
+    val focusRequester = remember { FocusRequester() }
+
     Scaffold(
+        // Top Bar for Infos
         topBar = {ToDoTopAppBar(title = topAppBarTitle)},
-        bottomBar = {ToDoNavigationBar()} ,
+        // Bottom Bar for Navigation
+        bottomBar = {ToDoNavigationBar()},
+        // Button to Add a ToDoElement
         floatingActionButton = {
             FloatingActionButton(
-                //shape = CircleShape,
-                onClick = {}
-            ) {
-                Icon(Icons.Filled.Add, contentDescription = "Add")
-            }
-        },
-        floatingActionButtonPosition = FabPosition.End
+                onClick = { showDialog.value = true },
+                content = { Icon(Icons.Filled.Add, contentDescription = "Add") }
+            )
+        }
     ) { innerPadding ->
         NavHost(
             navController = navController,
@@ -151,9 +66,17 @@ fun ToDoApp(
         ) {
             composable(ToDoScreen.StartScreen.name) {
                 StartScreen(toDoElements = fullToDoList)
-
             }
         }
+    }
+    // The Add Element Dialog
+    if (showDialog.value) {
+        AddToDoElementDialog(
+            viewModel = viewModel,
+            onDismissRequest = { showDialog.value = false },
+            options,
+            focusRequester = focusRequester
+        )
     }
 }
 
@@ -193,3 +116,8 @@ fun ToDoNavigationBar(){
 
 }
 // preview of the top & bottom app bars
+@Preview
+@Composable
+private fun ToDoScreenPreview(){
+    ToDoApp()
+}
