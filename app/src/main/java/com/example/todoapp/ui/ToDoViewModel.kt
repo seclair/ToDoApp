@@ -21,6 +21,10 @@ class ToDoViewModel(private val toDoElementDao: ToDoElementDAO): ViewModel() {
     suspend fun deleteToDoElement(toDoElement: ToDoElement){
         toDoElementDao.delete(toDoElement)
     }
+    // Update a ToDoElement from the Database
+    suspend fun updateToDoElement(toDoElement: ToDoElement){
+        toDoElementDao.update(toDoElement)
+    }
 
     companion object {
         val factory : ViewModelProvider.Factory = viewModelFactory {

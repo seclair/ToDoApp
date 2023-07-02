@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -19,8 +20,9 @@ interface ToDoElementDAO {
     // Add a ToDoElement to the Database
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(toDoElement: ToDoElement)
-    //@Update
-    //suspend fun update(toDoElement: ToDoElement)
+    // Change Data in a given ToDoElement
+    @Update
+    suspend fun update(toDoElement: ToDoElement)
     @Delete
     suspend fun delete(toDoElement: ToDoElement)
     //@Query("SELECT * FROM ToDoElement ORDER BY id ASC LIMIT 1;\n")

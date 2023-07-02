@@ -26,6 +26,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.todoapp.data.ToDoElement
 
 enum class ToDoScreen {
     StartScreen,
@@ -46,6 +47,10 @@ fun ToDoApp(
     val options = listOf("Default List", "Einkaufs Liste", "Lese Liste")
     val focusRequester = remember { FocusRequester() }
 
+    // For ToDoSheen
+    var showToDoSheet = remember { mutableStateOf(false) }
+    var chosenToDoElement = remember { mutableStateOf(ToDoElement("",0,"","")) }
+
     Scaffold(
         // Top Bar for Infos
         topBar = {ToDoTopAppBar(title = topAppBarTitle)},
@@ -65,9 +70,19 @@ fun ToDoApp(
             startDestination = ToDoScreen.StartScreen.name
         ) {
             composable(ToDoScreen.StartScreen.name) {
-                StartScreen(viewModel, toDoElements = fullToDoList)
+                StartScreen(viewModel, toDoElements = fullToDoList, showToDoSheet, chosenToDoElement)
             }
         }
+    }
+    // The ToDoSheet to display and edit ToDoElement information
+    if(showToDoSheet.value){
+        ToDoSheet(
+            viewModel,
+            chosenToDoElement,
+            showToDoSheet,
+            options,
+            focusRequester = focusRequester
+        )
     }
     // The Add Element Dialog
     if (showDialog.value) {

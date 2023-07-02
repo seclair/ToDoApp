@@ -15,7 +15,9 @@ fun ListScreen() {
 fun ToDoList(viewModel: ToDoViewModel, todolist: List<ToDoElement>, modifier: Modifier = Modifier){
     LazyColumn{
         items(todolist){todoelement->
-            ClickableToDoCard(viewModel, todoelement, modifier)
+            ToDoCard(viewModel, todoelement, modifier){
+
+            }
         }
     }
 }

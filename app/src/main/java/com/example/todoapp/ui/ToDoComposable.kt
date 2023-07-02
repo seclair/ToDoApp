@@ -29,7 +29,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.example.todoapp.data.ToDoElement
@@ -38,12 +37,8 @@ import kotlin.math.roundToInt
 
 @Composable
 fun ClickableToDoCard(viewModel: ToDoViewModel, element: ToDoElement, modifier: Modifier = Modifier){
-    //val coroutineScope = rememberCoroutineScope()
     ToDoCard(viewModel = viewModel, element = element, modifier = modifier) {
         Log.d("Room", "called .onClick in ClickableToDoCard")
-        //coroutineScope.launch {
-        //    viewModel.deleteToDoElement(element)
-        //}
     }
 }
 
@@ -53,27 +48,24 @@ fun ToDoCard(viewModel: ToDoViewModel, element: ToDoElement, modifier: Modifier 
     val coroutineScope = rememberCoroutineScope()
     // for dragging action
     var offsetX by remember { mutableStateOf(0f) }
-    //var isDragging by remember { mutableStateOf(false) }
     var cardWidth by remember { mutableStateOf(0) }
     var alphaValues by remember { mutableStateOf(Pair(0f,1f)) }
     Box(modifier = Modifier){
-        //if(isDragging){
-            Card(
-                modifier = Modifier
-                    .matchParentSize()
-                    .padding(4.dp)
-                    .alpha(alphaValues.first),
-                colors = CardDefaults.cardColors(MaterialTheme.colorScheme.onPrimaryContainer)
-            ){
-                Box(contentAlignment = Alignment.Center, content = { Text(
-                    text = " Finished!",
-                    style = MaterialTheme.typography.displayMedium,
-                    color = MaterialTheme.colorScheme.background,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.wrapContentHeight().padding(4.dp).align(Alignment.Center)
-                )})
-            }
-        //}
+        Card(
+            modifier = Modifier
+                .matchParentSize()
+                .padding(4.dp)
+                .alpha(alphaValues.first),
+            colors = CardDefaults.cardColors(MaterialTheme.colorScheme.onPrimaryContainer)
+        ){
+            Box(contentAlignment = Alignment.Center, content = { Text(
+                text = " Finished!",
+                style = MaterialTheme.typography.displayMedium,
+                color = MaterialTheme.colorScheme.background,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.wrapContentHeight().padding(4.dp).align(Alignment.Center)
+            )})
+        }
         ElevatedCard(
             Modifier
                 .fillMaxWidth()
@@ -94,7 +86,6 @@ fun ToDoCard(viewModel: ToDoViewModel, element: ToDoElement, modifier: Modifier 
                             }
                         }
                         offsetX = 0f
-                        //isDragging = false
                         alphaValues = Pair(0f, 1f)
                     },
                     orientation = Orientation.Horizontal
@@ -127,15 +118,15 @@ fun ToDoCard(viewModel: ToDoViewModel, element: ToDoElement, modifier: Modifier 
 
 // Calculate Alpha Values for swiping action
 fun getAlpha(x: Float, width: Int ): Pair<Float, Float>{
-    val colorBackAlpha: Float = 0.8f * x / width
-    val colorCardAlpha: Float = 1 - 0.6f * x/width
-    return Pair(colorBackAlpha.coerceAtMost(1f), colorCardAlpha.coerceAtMost(1f))
+    val colorBackAlpha: Float = ( 0.8f * x / width - 0.2f ).coerceAtMost(1f)
+    val colorCardAlpha: Float = ( 1 - 0.6f * x / width ).coerceAtMost(1f)
+    return Pair(colorBackAlpha, colorCardAlpha)
 }
 
-@Preview
+/*@Preview
 @Composable
 private fun ToDoCardPreview(){
-    val dummyElement = ToDoElement("Beilspiel Liste",0,"Ein Beispiel ToDo, could be a longer title too.","Nearly no description, but we could write a lot in here. A LOT! And some more, because this is a decription-.")
+    //val dummyElement = ToDoElement("Beilspiel Liste",0,"Ein Beispiel ToDof, could be a longer title too.","Nearly no description, but we could write a lot in here. A LOT! And some more, because this is a decription-.")
     //ToDoCard(element = dummyElement){
     //}
-}
+}*/

@@ -51,7 +51,7 @@ fun AddToDoElementDialog(
     focusRequester: FocusRequester
 ){
     var text by rememberSaveable(stateSaver = TextFieldValue.Saver) {
-        mutableStateOf(TextFieldValue("", TextRange(0, 7)))
+        mutableStateOf(TextFieldValue("", TextRange(0, 1)))
     }
 
     var expanded by remember { mutableStateOf(false) }
