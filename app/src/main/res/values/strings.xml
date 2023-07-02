@@ -4,4 +4,9 @@
     <string name="screen_list_name">ToDoList Screen</string>
     <string name="screen_add_name">Add Element Screen</string>
     <string name="back_button">Back</string>
+    // The status strings must be in order. !! Problem for Errors and Security -> fix it
+    <string name="status_0">Backlog</string>
+    <string name="status_1">On Hold</string>
+    <string name="status_2">Active</string>
+    <string name="status_3">Urgent</string>
 </resources>

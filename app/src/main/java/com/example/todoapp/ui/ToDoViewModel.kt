@@ -25,6 +25,10 @@ class ToDoViewModel(private val toDoElementDao: ToDoElementDAO): ViewModel() {
     suspend fun updateToDoElement(toDoElement: ToDoElement){
         toDoElementDao.update(toDoElement)
     }
+    suspend fun updateToDoElementStatus(toDoElement: ToDoElement, newStatus: Int){
+        toDoElement.status = newStatus
+        toDoElementDao.update(toDoElement)
+    }
 
     companion object {
         val factory : ViewModelProvider.Factory = viewModelFactory {

@@ -23,7 +23,7 @@ fun StartScreen(
             items = toDoElements,
             key = { ToDoElement -> ToDoElement.id }
         ) { singletodo ->
-            ToDoCard(viewModel, element = singletodo){
+            ToDoCard(viewModel, element = singletodo, modifier){
                 chosenToDoElement.value = singletodo
                 showToDoSheet.value = true
             }

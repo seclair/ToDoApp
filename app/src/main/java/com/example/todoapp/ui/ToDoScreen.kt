@@ -70,7 +70,7 @@ fun ToDoApp(
             startDestination = ToDoScreen.StartScreen.name
         ) {
             composable(ToDoScreen.StartScreen.name) {
-                StartScreen(viewModel, toDoElements = fullToDoList, showToDoSheet, chosenToDoElement)
+                StartScreen(viewModel, toDoElements = fullToDoList, showToDoSheet, chosenToDoElement, Modifier)
             }
         }
     }

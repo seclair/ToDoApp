@@ -28,11 +28,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import com.example.todoapp.R
 import com.example.todoapp.data.ToDoElement
 import kotlinx.coroutines.launch
+import kotlin.math.abs
 import kotlin.math.roundToInt
 
 @Composable
@@ -49,25 +52,56 @@ fun ToDoCard(viewModel: ToDoViewModel, element: ToDoElement, modifier: Modifier 
     // for dragging action
     var offsetX by remember { mutableStateOf(0f) }
     var cardWidth by remember { mutableStateOf(0) }
-    var alphaValues by remember { mutableStateOf(Pair(0f,1f)) }
-    Box(modifier = Modifier){
+    var alphaValues by remember { mutableStateOf(Triple(0f,1f,0f)) }
+
+    // SwipeBoxTexts
+    var textRightSwipe: String = "Error"
+    var textLeftSwipe: String = "Error"
+    when (element.status ){
+        0 -> {textRightSwipe = "Active"
+            textLeftSwipe = "Abandon"}
+        1 -> {textRightSwipe = "Finished"
+            textLeftSwipe = "Active"}
+        2 -> {textRightSwipe = "Finished"
+            textLeftSwipe = "On Hold"}
+        3 -> {textRightSwipe = "Finished"
+            textLeftSwipe = "On Hold"}
+        else -> println("Error")
+    }
+
+    Box(modifier = modifier){
         Card(
-            modifier = Modifier
+            modifier = modifier
+                .matchParentSize()
+                .padding(4.dp)
+                .alpha(alphaValues.third),
+            colors = CardDefaults.cardColors(MaterialTheme.colorScheme.onPrimaryContainer)
+        ){
+            Box(contentAlignment = Alignment.Center, content = { Text(
+                text = textRightSwipe,
+                style = MaterialTheme.typography.displayMedium,
+                color = MaterialTheme.colorScheme.background,
+                textAlign = TextAlign.Center,
+                modifier = modifier.wrapContentHeight().padding(4.dp)
+            )})
+        }
+        Card(
+            modifier = modifier
                 .matchParentSize()
                 .padding(4.dp)
                 .alpha(alphaValues.first),
             colors = CardDefaults.cardColors(MaterialTheme.colorScheme.onPrimaryContainer)
         ){
-            Box(contentAlignment = Alignment.Center, content = { Text(
-                text = " Finished!",
+            Box(contentAlignment = Alignment.CenterEnd, content = { Text(
+                text = textLeftSwipe,
                 style = MaterialTheme.typography.displayMedium,
                 color = MaterialTheme.colorScheme.background,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.wrapContentHeight().padding(4.dp).align(Alignment.Center)
+                textAlign = TextAlign.Right,
+                modifier = modifier.wrapContentHeight().padding(4.dp)
             )})
         }
         ElevatedCard(
-            Modifier
+            modifier
                 .fillMaxWidth()
                 .onSizeChanged { size -> cardWidth = size.width }
                 .padding(4.dp)
@@ -76,31 +110,44 @@ fun ToDoCard(viewModel: ToDoViewModel, element: ToDoElement, modifier: Modifier 
                 .draggable(
                     state = rememberDraggableState { delta ->
                         offsetX += delta
-                        //isDragging = offsetX > cardWidth * 0.1
                         alphaValues = getAlpha(offsetX, cardWidth)
                     },
                     onDragStopped = {
                         if (offsetX > 0.6f * cardWidth) {
                             coroutineScope.launch {
-                                viewModel.deleteToDoElement(element)
+                                if(element.status > 0){
+                                    viewModel.deleteToDoElement(element)
+                                }else{
+                                    viewModel.updateToDoElementStatus(element, 2)
+                                }
+                            }
+                        }else if(-offsetX > 0.6f * cardWidth) {
+                            coroutineScope.launch {
+                                if(element.status == 0){
+                                    viewModel.deleteToDoElement(element)
+                                }else if(element.status == 1){
+                                    viewModel.updateToDoElementStatus(element, 2)
+                                }else if(element.status > 1){
+                                    viewModel.updateToDoElementStatus(element, 1)
+                                }
                             }
                         }
                         offsetX = 0f
-                        alphaValues = Pair(0f, 1f)
+                        alphaValues = Triple(0f, 1f,0f)
                     },
                     orientation = Orientation.Horizontal
                 )
                 .clickable { onClick() },
             elevation = CardDefaults.cardElevation(defaultElevation = 10.dp)
         ){
-            Column(Modifier.padding(10.dp)){
+            Column(modifier.padding(10.dp)){
                 Row(horizontalArrangement = Arrangement.SpaceBetween){
                     Text(text = element.title,
-                        Modifier.weight(1f),
+                        modifier.weight(1f),
                         style = MaterialTheme.typography.headlineSmall
                     )
                     Column(){
-                        Text(text = "Status:"+element.status.toString(),
+                        Text(text = stringResource(id = R.string.status_0+element.status),
                             style = MaterialTheme.typography.labelLarge
                         )
                         Text(text = element.listTitle,
@@ -117,10 +164,11 @@ fun ToDoCard(viewModel: ToDoViewModel, element: ToDoElement, modifier: Modifier 
 }
 
 // Calculate Alpha Values for swiping action
-fun getAlpha(x: Float, width: Int ): Pair<Float, Float>{
-    val colorBackAlpha: Float = ( 0.8f * x / width - 0.2f ).coerceAtMost(1f)
-    val colorCardAlpha: Float = ( 1 - 0.6f * x / width ).coerceAtMost(1f)
-    return Pair(colorBackAlpha, colorCardAlpha)
+fun getAlpha(x: Float, width: Int ): Triple<Float, Float, Float>{
+    val rightAlpha: Float = ( 0.8f * x / width - 0.2f ).coerceAtMost(1f)
+    val leftAlpha: Float = ( 0.8f * -x / width - 0.2f ).coerceAtMost(1f)
+    val cardAlpha: Float = ( 1 - 0.6f * abs(x) / width ).coerceAtMost(1f)
+    return Triple(leftAlpha, cardAlpha, rightAlpha)
 }
 
 /*@Preview

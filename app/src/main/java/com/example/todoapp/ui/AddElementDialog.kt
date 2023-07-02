@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.AlertDialogDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -34,11 +35,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import com.example.todoapp.R
 import com.example.todoapp.data.ToDoElement
 import kotlinx.coroutines.launch
 
@@ -54,8 +57,10 @@ fun AddToDoElementDialog(
         mutableStateOf(TextFieldValue("", TextRange(0, 1)))
     }
 
-    var expanded by remember { mutableStateOf(false) }
+    var expandedList by remember { mutableStateOf(false) }
     var selectedMenuItem by remember { mutableStateOf(options[0]) }
+    var expandedStatus by remember { mutableStateOf(false) }
+    var selectedMenuItemStatus by remember { mutableStateOf(0) }
     val coroutineScope = rememberCoroutineScope()
 
 
@@ -82,13 +87,13 @@ fun AddToDoElementDialog(
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Row(modifier = Modifier.align(Alignment.End)){
-                    ElevatedButton(onClick = { expanded = true }) {
+                    ElevatedButton(onClick = { expandedList = true }) {
                         Icon(Icons.Default.List, contentDescription = "List")
                         Text(selectedMenuItem.substring(0,7))
                     }
                     DropdownMenu(
-                        expanded = expanded,
-                        onDismissRequest = { expanded = false },
+                        expanded = expandedList,
+                        onDismissRequest = { expandedList = false },
                         modifier = Modifier.wrapContentSize(),
                         offset = DpOffset(0.dp, -48.dp)
                     ) {
@@ -99,28 +104,47 @@ fun AddToDoElementDialog(
                                     selectedMenuItem = option
                                     Log.d("Dialog", "option is: "+option)
                                     Log.d("Dialog", "selectedmenuItem is: "+selectedMenuItem)
-                                    expanded = false
+                                    expandedList = false
                                 })
                         }
                     }
                     Spacer(modifier = Modifier.weight(1f))
-                    ElevatedButton(
-                        onClick = {
-                            coroutineScope.launch {
-                                viewModel.addToDoElement(
-                                    ToDoElement(
-                                        selectedMenuItem,
-                                        0,
-                                        text.text,
-                                        ""
-                                    )
-                                )
-                            }
-                            onDismissRequest.invoke()
-                        }
-                    ) {
-                        Text("Add ToDoElement")
+                    // Choose Status
+                    ElevatedButton(onClick = { expandedStatus = true}) {
+                        Icon(Icons.Default.Star, contentDescription = "List")
+                        Text(stringResource(id = R.string.status_0+selectedMenuItemStatus))
                     }
+                    DropdownMenu(
+                        expanded = expandedStatus,
+                        onDismissRequest = { expandedStatus = false },
+                        modifier = Modifier.wrapContentSize()
+                    ) {
+                        for(i in 0..3){
+                            DropdownMenuItem(
+                                text = { Text(text = stringResource(id = R.string.status_0+i))},
+                                onClick = {
+                                    selectedMenuItemStatus = i
+                                    expandedStatus = false
+                                })
+                        }
+                    }
+                }
+                ElevatedButton(
+                    onClick = {
+                        coroutineScope.launch {
+                            viewModel.addToDoElement(
+                                ToDoElement(
+                                    selectedMenuItem,
+                                    selectedMenuItemStatus,
+                                    text.text,
+                                    ""
+                                )
+                            )
+                        }
+                        onDismissRequest.invoke()
+                    }
+                ) {
+                    Text("Add ToDoElement")
                 }
             }
         }

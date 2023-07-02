@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ElevatedButton
@@ -26,12 +27,13 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import com.example.todoapp.R
 import com.example.todoapp.data.ToDoElement
 import kotlinx.coroutines.launch
 
@@ -44,8 +46,10 @@ fun ToDoSheet(
     focusRequester: FocusRequester,
     modifier: Modifier = Modifier
 ){
-    var expanded by remember { mutableStateOf(false) }
-    var selectedMenuItem by remember { mutableStateOf(options[0]) }
+    var expandedList by remember { mutableStateOf(false) }
+    var selectedMenuItemList by remember { mutableStateOf(options[0]) }
+    var expandedStatus by remember { mutableStateOf(false) }
+    var selectedMenuItemStatus by remember { mutableStateOf(element.value.status) }
     val coroutineScope = rememberCoroutineScope()
     var textTitle by rememberSaveable(stateSaver = TextFieldValue.Saver) {
         mutableStateOf(TextFieldValue(element.value.title))
@@ -68,10 +72,13 @@ fun ToDoSheet(
                 .padding(64.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ){
+            // Titel des ToDoElements
             OutlinedTextField(
                 value = textTitle,
                 onValueChange = { textTitle= it },
-                modifier = Modifier.fillMaxWidth().onFocusChanged{skipPartiallyExpanded = it.isFocused},
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .onFocusChanged { skipPartiallyExpanded = it.isFocused },
                 label = {Text("Your ToDo:")},
                 minLines = 3,
                 maxLines = 3,
@@ -79,35 +86,49 @@ fun ToDoSheet(
             //Text(element.value.description)
             Spacer(Modifier.height(4.dp))
             Row(modifier = Modifier.align(Alignment.End)){
-                ElevatedButton(onClick = { expanded = true }) {
+                // Drop Down Menu to choose the List
+                ElevatedButton(onClick = { expandedList = true }) {
                     Icon(Icons.Default.List, contentDescription = "List")
-                    Text(selectedMenuItem.substring(0,7))
+                    Text(selectedMenuItemList.substring(0,7))
                 }
                 DropdownMenu(
-                    expanded = expanded,
-                    onDismissRequest = { expanded = false },
+                    expanded = expandedList,
+                    onDismissRequest = { expandedList = false },
                     modifier = Modifier.wrapContentSize()
                 ) {
                     options.forEach{ option ->
                         DropdownMenuItem(
                             text = { Text(text = option)},
                             onClick = {
-                                selectedMenuItem = option
-                                expanded = false
+                                selectedMenuItemList = option
+                                expandedList = false
                             })
                     }
                 }
                 Spacer(modifier = Modifier.weight(1f))
-                ElevatedButton(
-                    onClick = {
-                        toDoStatusN=toDoStatusN+1
-                    }
+                // Drop Down Menu to choose the Status
+                ElevatedButton(onClick = { expandedStatus = true}) {
+                    Icon(Icons.Default.Star, contentDescription = "List")
+                    Text(stringResource(id = R.string.status_0+selectedMenuItemStatus))
+                }
+                DropdownMenu(
+                    expanded = expandedStatus,
+                    onDismissRequest = { expandedStatus = false },
+                    modifier = Modifier.wrapContentSize()
                 ) {
-                    Text("Status: " + toDoStatusN)
+                    for(i in 0..3){
+                        DropdownMenuItem(
+                            text = { Text(text = stringResource(id = R.string.status_0+i))},
+                            onClick = {
+                                selectedMenuItemStatus = i
+                                expandedStatus = false
+                            })
+                    }
                 }
             }
             Spacer(Modifier.height(10.dp))
             Row(modifier = Modifier.align(Alignment.End)){
+                // Button to Close without saving
                 ElevatedButton(
                     onClick = {
                         showToDoSheet.value = false
@@ -116,12 +137,13 @@ fun ToDoSheet(
                     Text("Discard")
                 }
                 Spacer(modifier = Modifier.weight(1f))
+                // Button to Save the Changes
                 ElevatedButton(
                     onClick = {
                         coroutineScope.launch {
                             val updatedToDoElement = ToDoElement(
-                                selectedMenuItem,
-                                toDoStatusN,
+                                selectedMenuItemList,
+                                selectedMenuItemStatus,
                                 textTitle.text,
                                 ""
                             )

@@ -10,18 +10,18 @@ data class ToDoElement(
     // Name of the ToDoList the Element is a part of.
     @NonNull
     @ColumnInfo(name="List")
-    val listTitle: String,
+    var listTitle: String,
     // Current Status of the ToDoElement
     @NonNull
     @ColumnInfo(name="Status")
-    val status: Int,
+    var status: Int,
     // Title of the ToDoElement
     @NonNull
     @ColumnInfo(name="Title")
-    val title: String,
+    var title: String,
     // Description of the ToDoElement
     @ColumnInfo(name="Description")
-    val description: String
+    var description: String
 ){
     @PrimaryKey(autoGenerate = true)
     var id: Long = 0
