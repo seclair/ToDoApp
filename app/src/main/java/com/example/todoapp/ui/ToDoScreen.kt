@@ -14,23 +14,25 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.todoapp.data.ToDoElement
 
 enum class ToDoScreen {
     StartScreen,
-    ListScreen
+    ListScreen,
+    SingleList
 }
 
 @Composable
@@ -39,8 +41,14 @@ fun ToDoApp(
 ) {
     val navController = rememberNavController()
     val startScreenTitle = "StartScreen"
+    val backStackEntry by navController.currentBackStackEntryAsState()
+    val currentScreen = ToDoScreen.valueOf(
+        backStackEntry?.destination?.route ?: ToDoScreen.StartScreen.name
+    )
+
     val topAppBarTitle by remember { mutableStateOf(startScreenTitle) }
     val fullToDoList by viewModel.getAllToDos().collectAsState(emptyList())
+    var selectedItem = remember { mutableStateOf(0)}
 
     // For Add ToDoElement Dialog
     var showDialog = remember { mutableStateOf(false) }
@@ -51,36 +59,14 @@ fun ToDoApp(
     var showToDoSheet = remember { mutableStateOf(false) }
     var chosenToDoElement = remember { mutableStateOf(ToDoElement("",0,"","")) }
 
+    // For the ToDoLists
+    var chosenToDoList = remember { mutableStateOf(options[0]) }
+
     Scaffold(
         // Top Bar for Infos
-        topBar = {ToDoTopAppBar(title = topAppBarTitle)},
+        topBar = {ToDoTopAppBar(title = currentScreen.name)},
         // Bottom Bar for Navigation
-        bottomBar = {ToDoNavigationBar( onNavigate = {navController.navigate(ToDoScreen.StartScreen.name) })},
-        /*bottomBar = {
-            var selectedItem by remember { mutableStateOf(0)}
-            var items = listOf("Start", "Lists")
-            NavigationBar{
-                items.forEachIndexed { index, item ->
-                    NavigationBarItem(
-                        icon = {
-                            when(item){
-                                "Start" -> Icon(Icons.Filled.Home, contentDescription = item)
-                                "Lists" -> Icon(Icons.Filled.List, contentDescription = item)
-                            }
-                        },
-                        label = {Text(item)},
-                        selected = selectedItem == index,
-                        onClick = {
-                            selectedItem = index
-                            when(index){
-                                0 -> navController.navigate(ToDoScreen.StartScreen.name)
-                                1 -> navController.navigate(ToDoScreen.ListScreen.name)
-                            }
-                        }
-                    )
-                }
-            }
-        },*/
+        bottomBar = {ToDoNavigationBar( selectedItem, onNavigate = {navController.navigate(it) })},
         // Button to Add a ToDoElement
         floatingActionButton = {
             FloatingActionButton(
@@ -98,7 +84,10 @@ fun ToDoApp(
                 StartScreen(viewModel, toDoElements = fullToDoList, showToDoSheet, chosenToDoElement, Modifier)
             }
             composable(ToDoScreen.ListScreen.name) {
-                ListScreen()
+                ListScreen(options, chosenToDoList, onNavigate = {navController.navigate(it)}, Modifier)
+            }
+            composable(ToDoScreen.SingleList.name){
+                SingleListScreen(viewModel, chosenToDoList, showToDoSheet, chosenToDoElement, Modifier)
             }
         }
     }
@@ -138,8 +127,8 @@ fun ToDoTopAppBar(
 // The bottom App Bar to hold the navigation
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun ToDoNavigationBar( onNavigate: (String) -> Unit = {} ){
-    var selectedItem by remember { mutableStateOf(0)}
+fun ToDoNavigationBar( selectedItem: MutableState<Int> , onNavigate: (String) -> Unit = {} ){
+
     var items = listOf("Start", "Lists")
     NavigationBar{
         items.forEachIndexed { index, item ->
@@ -151,10 +140,10 @@ fun ToDoNavigationBar( onNavigate: (String) -> Unit = {} ){
                     }
                 },
                 label = {Text(item)},
-                selected = selectedItem == index,
+                selected = selectedItem.value == index,
                 onClick = {
-                    selectedItem = index
-                    when(selectedItem){
+                    selectedItem.value = index
+                    when(selectedItem.value){
                         0 -> onNavigate(ToDoScreen.StartScreen.name)
                         1 -> onNavigate(ToDoScreen.ListScreen.name)
                     }

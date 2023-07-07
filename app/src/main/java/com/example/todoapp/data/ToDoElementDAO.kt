@@ -17,6 +17,9 @@ interface ToDoElementDAO {
     // Gets the ToDos for a specific Title.
     @Query("SELECT * from DefaultToDoList WHERE title = :title ORDER BY title ASC")
     fun getToDos(title: String): Flow<List<ToDoElement>>
+    // Gets all TODOs of a given List
+    @Query("SELECT * from DefaultToDoList WHERE list = :listName ORDER BY title ASC ")
+    fun getList(listName: String): Flow<List<ToDoElement>>
     // Add a ToDoElement to the Database
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(toDoElement: ToDoElement)
@@ -25,6 +28,7 @@ interface ToDoElementDAO {
     suspend fun update(toDoElement: ToDoElement)
     @Delete
     suspend fun delete(toDoElement: ToDoElement)
+
     //@Query("SELECT * FROM ToDoElement ORDER BY id ASC LIMIT 1;\n")
     //fun getFirstToDo(): ToDoElement
 }
