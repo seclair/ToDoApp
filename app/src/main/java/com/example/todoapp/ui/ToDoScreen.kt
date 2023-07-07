@@ -55,7 +55,32 @@ fun ToDoApp(
         // Top Bar for Infos
         topBar = {ToDoTopAppBar(title = topAppBarTitle)},
         // Bottom Bar for Navigation
-        bottomBar = {ToDoNavigationBar()},
+        bottomBar = {ToDoNavigationBar( onNavigate = {navController.navigate(ToDoScreen.StartScreen.name) })},
+        /*bottomBar = {
+            var selectedItem by remember { mutableStateOf(0)}
+            var items = listOf("Start", "Lists")
+            NavigationBar{
+                items.forEachIndexed { index, item ->
+                    NavigationBarItem(
+                        icon = {
+                            when(item){
+                                "Start" -> Icon(Icons.Filled.Home, contentDescription = item)
+                                "Lists" -> Icon(Icons.Filled.List, contentDescription = item)
+                            }
+                        },
+                        label = {Text(item)},
+                        selected = selectedItem == index,
+                        onClick = {
+                            selectedItem = index
+                            when(index){
+                                0 -> navController.navigate(ToDoScreen.StartScreen.name)
+                                1 -> navController.navigate(ToDoScreen.ListScreen.name)
+                            }
+                        }
+                    )
+                }
+            }
+        },*/
         // Button to Add a ToDoElement
         floatingActionButton = {
             FloatingActionButton(
@@ -71,6 +96,9 @@ fun ToDoApp(
         ) {
             composable(ToDoScreen.StartScreen.name) {
                 StartScreen(viewModel, toDoElements = fullToDoList, showToDoSheet, chosenToDoElement, Modifier)
+            }
+            composable(ToDoScreen.ListScreen.name) {
+                ListScreen()
             }
         }
     }
@@ -110,7 +138,7 @@ fun ToDoTopAppBar(
 // The bottom App Bar to hold the navigation
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun ToDoNavigationBar(){
+fun ToDoNavigationBar( onNavigate: (String) -> Unit = {} ){
     var selectedItem by remember { mutableStateOf(0)}
     var items = listOf("Start", "Lists")
     NavigationBar{
@@ -124,7 +152,13 @@ fun ToDoNavigationBar(){
                 },
                 label = {Text(item)},
                 selected = selectedItem == index,
-                onClick = { selectedItem = index }
+                onClick = {
+                    selectedItem = index
+                    when(selectedItem){
+                        0 -> onNavigate(ToDoScreen.StartScreen.name)
+                        1 -> onNavigate(ToDoScreen.ListScreen.name)
+                    }
+                }
             )
         }
     }
