@@ -52,7 +52,7 @@ fun ToDoApp(
 
     // For Add ToDoElement Dialog
     var showDialog = remember { mutableStateOf(false) }
-    val options = listOf("Default List", "Einkaufs Liste", "Lese Liste")
+    val options = listOf("Default List", "Household List", "Shopping List", "Reading List", "Ideas List")
     val focusRequester = remember { FocusRequester() }
 
     // For ToDoSheen
