@@ -1,7 +1,10 @@
 package com.example.todoapp.ui
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -13,8 +16,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.todoapp.data.ToDoElement
 
 @Composable
@@ -29,21 +38,38 @@ fun ListScreen(
             ElevatedCard(
                 modifier
                     .fillMaxWidth()
-                    .padding(4.dp).clickable {
+                    .defaultMinSize(minHeight = 150.dp)
+                    //.wrapContentSize(Alignment.Center)
+                    .padding(4.dp)
+                    .clickable {
                         chosenToDoList.value = toDoList
                         onNavigate(ToDoScreen.SingleList.name)
                     },
                 elevation = CardDefaults.cardElevation(defaultElevation = 10.dp)
             ){
-                Text(toDoList)
+                Box(modifier = Modifier
+                    .fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                    //.wrapContentSize(Alignment.Center)
+                    ){
+                    Text(
+                        text = toDoList,
+                        fontSize = 40.sp,
+                        textAlign = TextAlign.Center
+                    )
+                }
             }
         }
 
     }
 }
 
-fun openToDoList(){
-
+@Preview
+@Composable
+fun PreviewList(){
+    val listOfStrings: List<String> = listOf("Apple", "Banana", "Orange", "Grapes")
+    var chosenToDoList = remember { mutableStateOf(listOfStrings[0]) }
+    ListScreen(toDoLists = listOfStrings, chosenToDoList = chosenToDoList, modifier = Modifier)
 }
 
 @Composable
