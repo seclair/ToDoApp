@@ -1,6 +1,5 @@
-package com.example.todoapp.ui
+package com.simpleofflineapp.todoapp.ui
 
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.draggable
@@ -32,18 +31,18 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import com.example.todoapp.R
-import com.example.todoapp.data.ToDoElement
+import com.simpleofflineapp.todoapp.R
+import com.simpleofflineapp.todoapp.data.ToDoElement
 import kotlinx.coroutines.launch
 import kotlin.math.abs
 import kotlin.math.roundToInt
 
-@Composable
+/*@Composable
 fun ClickableToDoCard(viewModel: ToDoViewModel, element: ToDoElement, modifier: Modifier = Modifier){
     ToDoCard(viewModel = viewModel, element = element, modifier = modifier) {
         Log.d("Room", "called .onClick in ClickableToDoCard")
     }
-}
+}*/
 
 @Composable
 fun ToDoCard(viewModel: ToDoViewModel, element: ToDoElement, modifier: Modifier = Modifier, onClick: () -> Unit){
@@ -55,8 +54,8 @@ fun ToDoCard(viewModel: ToDoViewModel, element: ToDoElement, modifier: Modifier 
     var alphaValues by remember { mutableStateOf(Triple(0f,1f,0f)) }
 
     // SwipeBoxTexts
-    var textRightSwipe: String = "Error"
-    var textLeftSwipe: String = "Error"
+    var textRightSwipe = "Error"
+    var textLeftSwipe = "Error"
     when (element.status ){
         0 -> {textRightSwipe = "Active"
             textLeftSwipe = "Abandon"}

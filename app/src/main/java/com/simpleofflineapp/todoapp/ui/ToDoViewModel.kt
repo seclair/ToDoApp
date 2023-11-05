@@ -1,13 +1,13 @@
-package com.example.todoapp.ui
+package com.simpleofflineapp.todoapp.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.todoapp.ToDoApplication
-import com.example.todoapp.data.ToDoElement
-import com.example.todoapp.data.ToDoElementDAO
+import com.simpleofflineapp.todoapp.ToDoApplication
+import com.simpleofflineapp.todoapp.data.ToDoElement
+import com.simpleofflineapp.todoapp.data.ToDoElementDAO
 import kotlinx.coroutines.flow.Flow
 
 class ToDoViewModel(private val toDoElementDao: ToDoElementDAO): ViewModel() {

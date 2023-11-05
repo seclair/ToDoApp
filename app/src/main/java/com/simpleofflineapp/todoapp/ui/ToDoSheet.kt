@@ -1,4 +1,4 @@
-package com.example.todoapp.ui
+package com.simpleofflineapp.todoapp.ui
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -33,8 +33,8 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
-import com.example.todoapp.R
-import com.example.todoapp.data.ToDoElement
+import com.simpleofflineapp.todoapp.R
+import com.simpleofflineapp.todoapp.data.ToDoElement
 import kotlinx.coroutines.launch
 
 @Composable

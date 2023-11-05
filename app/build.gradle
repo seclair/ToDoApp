@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace 'com.example.todoapp'
+    namespace 'com.simpleofflineapp.todoapp'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.example.todoapp"
+        applicationId "com.simpleofflineapp.todoapp"
         minSdk 24
         targetSdk 33
         versionCode 1

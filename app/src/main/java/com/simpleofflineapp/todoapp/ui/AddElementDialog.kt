@@ -1,6 +1,5 @@
-package com.example.todoapp.ui
+package com.simpleofflineapp.todoapp.ui
 
-import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -41,8 +40,8 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import com.example.todoapp.R
-import com.example.todoapp.data.ToDoElement
+import com.simpleofflineapp.todoapp.data.ToDoElement
+import com.simpleofflineapp.todoapp.R
 import kotlinx.coroutines.launch
 
 // TheAddItemDialog, called from the ToDoApp
@@ -102,8 +101,8 @@ fun AddToDoElementDialog(
                                 text = { Text(text = option)},
                                 onClick = {
                                     selectedMenuItem = option
-                                    Log.d("Dialog", "option is: "+option)
-                                    Log.d("Dialog", "selectedmenuItem is: "+selectedMenuItem)
+                                    //Log.d("Dialog", "option is: "+option)
+                                    //Log.d("Dialog", "selectedmenuItem is: "+selectedMenuItem)
                                     expandedList = false
                                 })
                         }

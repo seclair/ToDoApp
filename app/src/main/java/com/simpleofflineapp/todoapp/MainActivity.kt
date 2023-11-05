@@ -1,10 +1,10 @@
-package com.example.todoapp
+package com.simpleofflineapp.todoapp
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import com.example.todoapp.ui.ToDoApp
-import com.example.todoapp.ui.theme.ToDoAppTheme
+import com.simpleofflineapp.todoapp.ui.ToDoApp
+import com.simpleofflineapp.todoapp.ui.theme.ToDoAppTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

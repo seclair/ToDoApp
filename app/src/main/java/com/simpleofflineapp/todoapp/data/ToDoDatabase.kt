@@ -1,4 +1,4 @@
-package com.example.todoapp.data
+package com.simpleofflineapp.todoapp.data
 
 import android.content.Context
 import androidx.room.Database

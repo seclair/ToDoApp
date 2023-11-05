@@ -1,4 +1,4 @@
-package com.example.todoapp.ui
+package com.simpleofflineapp.todoapp.ui
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.padding
@@ -27,7 +27,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.todoapp.data.ToDoElement
+import com.simpleofflineapp.todoapp.data.ToDoElement
 
 enum class ToDoScreen {
     StartScreen,
