@@ -26,18 +26,19 @@ interface ToDoElementDAO {
     // Get a specific ToDoo by its ID
     @Query("SELECT * from DefaultToDoList WHERE id = :id")
     fun getToDo(id: Int): Flow<ToDoElement>
-    
+
     //-----------------------------------------------------------------------------
 
     // Add a ToDoElement to the Database
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(toDoElement: ToDoElement)
+
     // Change Data in a given ToDoElement
     @Update
     suspend fun update(toDoElement: ToDoElement)
+
+    // Delete a ToDoElement
     @Delete
     suspend fun delete(toDoElement: ToDoElement)
 
-    //@Query("SELECT * FROM ToDoElement ORDER BY id ASC LIMIT 1;\n")
-    //fun getFirstToDo(): ToDoElement
 }

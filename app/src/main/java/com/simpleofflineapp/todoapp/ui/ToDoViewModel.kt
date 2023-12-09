@@ -13,16 +13,17 @@ import kotlinx.coroutines.flow.Flow
 class ToDoViewModel(private val toDoElementDao: ToDoElementDAO): ViewModel() {
     // Get all ToDos.
     fun getAllToDos(): Flow<List<ToDoElement>> = toDoElementDao.getAllToDos()
-    // Get all ToDos in a given List.
-    fun getToDoList(listName: String): Flow<List<ToDoElement>> = toDoElementDao.getTaged(listName) 
+
+    // Get all ToDos with a given Tag.
+    fun getToggedToDos(tag: String): Flow<List<ToDoElement>> = toDoElementDao.getTaged(tag)
+
+    // -------------------------------------------------------------------------------------
+
     // Add a ToDoElement to the Database
     suspend fun addToDoElement(toDoElement: ToDoElement){
         toDoElementDao.insert(toDoElement)
     }
-    // Delete a ToDoElement from the Database
-    suspend fun deleteToDoElement(toDoElement: ToDoElement){
-        toDoElementDao.delete(toDoElement)
-    }
+
     // Update a ToDoElement from the Database
     suspend fun updateToDoElement(toDoElement: ToDoElement){
         toDoElementDao.update(toDoElement)
@@ -30,6 +31,11 @@ class ToDoViewModel(private val toDoElementDao: ToDoElementDAO): ViewModel() {
     suspend fun updateToDoElementStatus(toDoElement: ToDoElement, newStatus: Int){
         toDoElement.status = newStatus
         toDoElementDao.update(toDoElement)
+    }
+
+    // Delete a ToDoElement from the Database
+    suspend fun deleteToDoElement(toDoElement: ToDoElement){
+        toDoElementDao.delete(toDoElement)
     }
 
     companion object {
