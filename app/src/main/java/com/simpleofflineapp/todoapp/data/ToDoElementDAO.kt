@@ -11,15 +11,24 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface ToDoElementDAO {
 
-    // Gets the entire Default ToDos List.
+    // Get the entire Database, sorted by title.
     @Query("SELECT * from DefaultToDoList ORDER BY title ASC")
     fun getAllToDos(): Flow<List<ToDoElement>>
-    // Gets the ToDos for a specific Title.
+
+    // Get all ToDos which contain a given Tag.
+    @Query("SELECT * from DefaultToDoList WHERE tags = :tag ORDER BY title ASC ")
+    fun getTaged(tag: String): Flow<List<ToDoElement>>
+
+    // Gets the ToDos for a given Title.
     @Query("SELECT * from DefaultToDoList WHERE title = :title ORDER BY title ASC")
-    fun getToDos(title: String): Flow<List<ToDoElement>>
-    // Gets all TODOs of a given List
-    @Query("SELECT * from DefaultToDoList WHERE list = :listName ORDER BY title ASC ")
-    fun getList(listName: String): Flow<List<ToDoElement>>
+    fun getTiteled(title: String): Flow<List<ToDoElement>>
+
+    // Get a specific ToDoo by its ID
+    @Query("SELECT * from DefaultToDoList WHERE id = :id")
+    fun getToDo(id: Int): Flow<ToDoElement>
+    
+    //-----------------------------------------------------------------------------
+
     // Add a ToDoElement to the Database
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(toDoElement: ToDoElement)

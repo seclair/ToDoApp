@@ -14,7 +14,7 @@ class ToDoViewModel(private val toDoElementDao: ToDoElementDAO): ViewModel() {
     // Get all ToDos.
     fun getAllToDos(): Flow<List<ToDoElement>> = toDoElementDao.getAllToDos()
     // Get all ToDos in a given List.
-    fun getToDoList(listName: String): Flow<List<ToDoElement>> = toDoElementDao.getList(listName)
+    fun getToDoList(listName: String): Flow<List<ToDoElement>> = toDoElementDao.getTaged(listName) 
     // Add a ToDoElement to the Database
     suspend fun addToDoElement(toDoElement: ToDoElement){
         toDoElementDao.insert(toDoElement)
