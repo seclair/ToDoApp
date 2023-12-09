@@ -57,7 +57,7 @@ fun ToDoApp(
 
     // For ToDoSheen
     var showToDoSheet = remember { mutableStateOf(false) }
-    var chosenToDoElement = remember { mutableStateOf(ToDoElement("",0,"","")) }
+    var chosenToDoElement = remember { mutableStateOf(ToDoElement("","",0,"")) }
 
     // For the ToDoLists
     var chosenToDoList = remember { mutableStateOf(options[0]) }

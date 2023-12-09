@@ -149,7 +149,7 @@ fun ToDoCard(viewModel: ToDoViewModel, element: ToDoElement, modifier: Modifier 
                         Text(text = stringResource(id = R.string.status_0+element.status),
                             style = MaterialTheme.typography.labelLarge
                         )
-                        Text(text = element.listTitle,
+                        Text(text = "element.listTitle",
                             style = MaterialTheme.typography.labelMedium
                         )
                     }

@@ -142,10 +142,10 @@ fun ToDoSheet(
                     onClick = {
                         coroutineScope.launch {
                             val updatedToDoElement = ToDoElement(
-                                selectedMenuItemList,
-                                selectedMenuItemStatus,
-                                textTitle.text,
-                                ""
+                                "Titel",
+                                "Description",
+                                0,
+                                "Tags"
                             )
                             updatedToDoElement.id = element.value.id
                             viewModel.updateToDoElement(updatedToDoElement)

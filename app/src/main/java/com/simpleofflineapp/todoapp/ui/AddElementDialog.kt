@@ -40,8 +40,8 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import com.simpleofflineapp.todoapp.data.ToDoElement
 import com.simpleofflineapp.todoapp.R
+import com.simpleofflineapp.todoapp.data.ToDoElement
 import kotlinx.coroutines.launch
 
 // TheAddItemDialog, called from the ToDoApp
@@ -133,10 +133,10 @@ fun AddToDoElementDialog(
                         coroutineScope.launch {
                             viewModel.addToDoElement(
                                 ToDoElement(
-                                    selectedMenuItem,
-                                    selectedMenuItemStatus,
-                                    text.text,
-                                    ""
+                                    "Test Titel",
+                                    "Test Description",
+                                    0,
+                                    "Test Tags #one"
                                 )
                             )
                         }

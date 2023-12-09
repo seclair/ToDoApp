@@ -17,7 +17,7 @@ interface ToDoElementDAO {
 
     // Get all ToDos which contain a given Tag.
     @Query("SELECT * from DefaultToDoList WHERE tags = :tag ORDER BY title ASC ")
-    fun getTaged(tag: String): Flow<List<ToDoElement>>
+    fun getTagged(tag: String): Flow<List<ToDoElement>>
 
     // Gets the ToDos for a given Title.
     @Query("SELECT * from DefaultToDoList WHERE title = :title ORDER BY title ASC")

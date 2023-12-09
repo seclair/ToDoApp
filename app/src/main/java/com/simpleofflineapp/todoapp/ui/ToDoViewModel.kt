@@ -15,7 +15,7 @@ class ToDoViewModel(private val toDoElementDao: ToDoElementDAO): ViewModel() {
     fun getAllToDos(): Flow<List<ToDoElement>> = toDoElementDao.getAllToDos()
 
     // Get all ToDos with a given Tag.
-    fun getToggedToDos(tag: String): Flow<List<ToDoElement>> = toDoElementDao.getTaged(tag)
+    fun getToggedToDos(tag: String): Flow<List<ToDoElement>> = toDoElementDao.getTagged(tag)
 
     // -------------------------------------------------------------------------------------
 

@@ -81,7 +81,7 @@ fun SingleListScreen(
     chosenToDoElement: MutableState<ToDoElement>,
     modifier: Modifier = Modifier
 ){
-    val fullToDoList by viewModel.getToDoList(chosenToDoList.value).collectAsState(emptyList())
+    val fullToDoList by viewModel.getToggedToDos(chosenToDoList.value).collectAsState(emptyList())
     LazyColumn(modifier = modifier, contentPadding = PaddingValues(vertical = 8.dp)) {
         items(
             items = fullToDoList,
