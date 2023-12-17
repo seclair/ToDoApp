@@ -29,6 +29,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.simpleofflineapp.todoapp.R
@@ -81,7 +82,9 @@ fun ToDoCard(viewModel: ToDoViewModel, element: ToDoElement, modifier: Modifier 
                 style = MaterialTheme.typography.displayMedium,
                 color = MaterialTheme.colorScheme.background,
                 textAlign = TextAlign.Center,
-                modifier = modifier.wrapContentHeight().padding(4.dp)
+                modifier = modifier
+                    .wrapContentHeight()
+                    .padding(4.dp)
             )})
         }
         Card(
@@ -96,7 +99,9 @@ fun ToDoCard(viewModel: ToDoViewModel, element: ToDoElement, modifier: Modifier 
                 style = MaterialTheme.typography.displayMedium,
                 color = MaterialTheme.colorScheme.background,
                 textAlign = TextAlign.Right,
-                modifier = modifier.wrapContentHeight().padding(4.dp)
+                modifier = modifier
+                    .wrapContentHeight()
+                    .padding(4.dp)
             )})
         }
         ElevatedCard(
@@ -114,25 +119,25 @@ fun ToDoCard(viewModel: ToDoViewModel, element: ToDoElement, modifier: Modifier 
                     onDragStopped = {
                         if (offsetX > 0.6f * cardWidth) {
                             coroutineScope.launch {
-                                if(element.status > 0){
+                                if (element.status > 0) {
                                     viewModel.deleteToDoElement(element)
-                                }else{
+                                } else {
                                     viewModel.updateToDoElementStatus(element, 2)
                                 }
                             }
-                        }else if(-offsetX > 0.6f * cardWidth) {
+                        } else if (-offsetX > 0.6f * cardWidth) {
                             coroutineScope.launch {
-                                if(element.status == 0){
+                                if (element.status == 0) {
                                     viewModel.deleteToDoElement(element)
-                                }else if(element.status == 1){
+                                } else if (element.status == 1) {
                                     viewModel.updateToDoElementStatus(element, 2)
-                                }else if(element.status > 1){
+                                } else if (element.status > 1) {
                                     viewModel.updateToDoElementStatus(element, 1)
                                 }
                             }
                         }
                         offsetX = 0f
-                        alphaValues = Triple(0f, 1f,0f)
+                        alphaValues = Triple(0f, 1f, 0f)
                     },
                     orientation = Orientation.Horizontal
                 )
@@ -145,16 +150,13 @@ fun ToDoCard(viewModel: ToDoViewModel, element: ToDoElement, modifier: Modifier 
                         modifier.weight(1f),
                         style = MaterialTheme.typography.headlineSmall
                     )
-                    Column(){
+                    Column{
                         Text(text = stringResource(id = R.string.status_0+element.status),
                             style = MaterialTheme.typography.labelLarge
                         )
-                        Text(text = "element.listTitle",
-                            style = MaterialTheme.typography.labelMedium
-                        )
                     }
                 }
-                Row(){
+                Row{
                     Text(text = element.description)
                 }
             }
@@ -170,10 +172,120 @@ fun getAlpha(x: Float, width: Int ): Triple<Float, Float, Float>{
     return Triple(leftAlpha, cardAlpha, rightAlpha)
 }
 
-/*@Preview
+@Preview
 @Composable
-private fun ToDoCardPreview(){
-    //val dummyElement = ToDoElement("Beilspiel Liste",0,"Ein Beispiel ToDof, could be a longer title too.","Nearly no description, but we could write a lot in here. A LOT! And some more, because this is a decription-.")
-    //ToDoCard(element = dummyElement){
-    //}
-}*/
+fun ToDoCardPreviewWithElementAndModifier() {
+    val element = ToDoElement("Test ToDo", "Some Description", 1, "#daily")
+    val modifier = Modifier.clickable {}
+
+    // for coroutines
+    val coroutineScope = rememberCoroutineScope()
+    // for dragging action
+    var offsetX by remember { mutableStateOf(0f) }
+    var cardWidth by remember { mutableStateOf(0) }
+    var alphaValues by remember { mutableStateOf(Triple(0f,1f,0f)) }
+
+    // SwipeBoxTexts
+    var textRightSwipe = "Error"
+    var textLeftSwipe = "Error"
+    when (element.status ){
+        0 -> {textRightSwipe = "Active"
+            textLeftSwipe = "Abandon"}
+        1 -> {textRightSwipe = "Finished"
+            textLeftSwipe = "Active"}
+        2 -> {textRightSwipe = "Finished"
+            textLeftSwipe = "On Hold"}
+        3 -> {textRightSwipe = "Finished"
+            textLeftSwipe = "On Hold"}
+        else -> println("Error")
+    }
+
+    Box(modifier = modifier){
+        Card(
+            modifier = modifier
+                .matchParentSize()
+                .padding(4.dp)
+                .alpha(alphaValues.third),
+            colors = CardDefaults.cardColors(MaterialTheme.colorScheme.onPrimaryContainer)
+        ){
+            Box(contentAlignment = Alignment.Center, content = { Text(
+                text = textRightSwipe,
+                style = MaterialTheme.typography.displayMedium,
+                color = MaterialTheme.colorScheme.background,
+                textAlign = TextAlign.Center,
+                modifier = modifier
+                    .wrapContentHeight()
+                    .padding(4.dp)
+            )})
+        }
+        Card(
+            modifier = modifier
+                .matchParentSize()
+                .padding(4.dp)
+                .alpha(alphaValues.first),
+            colors = CardDefaults.cardColors(MaterialTheme.colorScheme.onPrimaryContainer)
+        ){
+            Box(contentAlignment = Alignment.CenterEnd, content = { Text(
+                text = textLeftSwipe,
+                style = MaterialTheme.typography.displayMedium,
+                color = MaterialTheme.colorScheme.background,
+                textAlign = TextAlign.Right,
+                modifier = modifier
+                    .wrapContentHeight()
+                    .padding(4.dp)
+            )})
+        }
+        ElevatedCard(
+            modifier
+                .fillMaxWidth()
+                .onSizeChanged { size -> cardWidth = size.width }
+                .padding(4.dp)
+                .alpha(alphaValues.second)
+                .offset { IntOffset(offsetX.roundToInt(), 0) }
+                .draggable(
+                    state = rememberDraggableState { delta ->
+                        offsetX += delta
+                        alphaValues = getAlpha(offsetX, cardWidth)
+                    },
+                    onDragStopped = {
+                        if (offsetX > 0.6f * cardWidth) {
+                            coroutineScope.launch {
+                                if (element.status > 0) {
+                                } else {
+                                }
+                            }
+                        } else if (-offsetX > 0.6f * cardWidth) {
+                            coroutineScope.launch {
+                                if (element.status == 0) {
+                                } else if (element.status == 1) {
+                                } else if (element.status > 1) {
+                                }
+                            }
+                        }
+                        offsetX = 0f
+                        alphaValues = Triple(0f, 1f, 0f)
+                    },
+                    orientation = Orientation.Horizontal
+                ),
+            elevation = CardDefaults.cardElevation(defaultElevation = 10.dp)
+        ){
+            Column(modifier.padding(10.dp)){
+                Row(horizontalArrangement = Arrangement.SpaceBetween){
+                    Text(text = element.title,
+                        modifier.weight(1f),
+                        style = MaterialTheme.typography.headlineSmall
+                    )
+                    Column{
+                        Text(text = stringResource(id = R.string.status_0+element.status),
+                            style = MaterialTheme.typography.labelLarge
+                        )
+                    }
+                }
+                Row{
+                    Text(text = element.description)
+                }
+            }
+        }
+    }
+}
+

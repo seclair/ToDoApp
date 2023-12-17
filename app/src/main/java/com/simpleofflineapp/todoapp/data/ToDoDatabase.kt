@@ -8,7 +8,7 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 
 //@Database(entities = [ToDoElement::class], version = 1, exportSchema = false)
-@Database(entities = [ToDoElement::class], version = 1)
+@Database(entities = [ToDoElement::class], version = 1  )
 abstract class ToDoDatabase : RoomDatabase() {
     abstract fun toDoElementDao(): ToDoElementDAO
 
